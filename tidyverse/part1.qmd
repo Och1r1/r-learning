@@ -4,23 +4,113 @@ format: html
 editor: visual
 ---
 
-## Quarto
+Learning about tidyverse from datacamp
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+# Dplyr package
 
 ```{r}
-1 + 1
+# Load the gapminder package
+library(gapminder)
+
+# Load the dplyr package
+library(dplyr)
+
+# Look at the gapminder dataset
+gapminder
 ```
 
-You can add options to executable code like this
+### Filter
+
+it is like where in sql.
 
 ```{r}
-#| echo: false
-2 * 2
+# Filter for Afghanistan
+gapminder |>
+  filter(country == "Afghanistan")
+
+# Filtering all observations that were recorded in 1957
+gapminder %>%
+    filter(year == 1957)
+
+# Filter for China in 2002
+gapminder |>
+    filter(year == 2002, country == 'China')
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+### Arrange
+
+Basically sorting. similar to sort by in sql
+
+```{r}
+# Sort in ascending order of lifeExp
+gapminder |>
+    arrange(lifeExp)
+
+# Sort in descending order of lifeExp
+gapminder |>
+    arrange(desc(lifeExp))
+
+# Filter for the year 1957, then arrange in descending order of population
+
+gapminder |>
+    filter(year == 1957) |>
+    arrange(desc(pop))
+```
+
+### Mutate
+
+mutate would allow you to change existing variable or add a new variable to the dataframe. In here, variable is meaning column name.
+
+```{r}
+# Use mutate to change lifeExp to be in months
+gapminder |>
+    mutate(lifeExp = lifeExp * 12)
+
+# Use mutate to create a new column called lifeExpMonths
+gapminder |>
+    mutate(lifeExpMonths = lifeExp * 12)
+
+# Filter, mutate, and arrange the gapminder dataset
+gapminder |>
+    filter(year == 2007) |>
+    mutate(lifeExpMonths = lifeExp * 12) |>
+    arrange(desc(lifeExpMonths))
+```
+
+# ggplot2
+
+```{r}
+library(ggplot2)
+
+# Create gapminder_1952
+gapminder_1952 <- gapminder |>
+  filter(year == 1952)
+
+# Change to put pop on the x-axis and gdpPercap on the y-axis
+ggplot(gapminder_1952, aes(x = pop, y = gdpPercap)) +
+  geom_point()
+
+# Create a scatter plot with pop on the x-axis and lifeExp on the y-axis
+ggplot(gapminder_1952, aes(x = pop, y = lifeExp)) +
+  geom_point()
+```
+
+### Log Scale
+
+```{r}
+# Scatter plot comparing gdpPercap and lifeExp, on x axis by a log a scale
+ggplot(gapminder_1952, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  scale_x_log10()
+
+# Scatter plot comparing pop and gdpPercap, with both axes on a log scale
+ggplot(gapminder_1952, aes(x = pop, y = gdpPercap)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10()
+```
+
+```{r}
+
+
+```
